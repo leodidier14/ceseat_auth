@@ -4,10 +4,6 @@ const router = require('express').Router()
 const path = require('path')
 const express = require('express')
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
-// const jwt = require('jsonwebtoken');
-
-//Load user model
-// const User = require('../model/user')
 
 //Load validation functions
 const {logincontroller} = require('../controller/routeController')
@@ -21,7 +17,7 @@ router.use(express.json());
 router.post('/login', function(req, res){
     logincontroller(req, res)
 });
-router.put('/logout', function(req, res){
+router.post('/logout', function(req, res){
     logoutcontroller(req, res)
 });
 router.post('/accesstoken', function(req, res){

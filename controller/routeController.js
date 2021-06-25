@@ -88,7 +88,23 @@ const accesstokencontroller = async (req, res) =>{
         const verifytoken = await jwt.verify(req.body.accesstoken, 'spvDLMU678yZu635T32TKfc8pQj4jJ4f')
         try {
             const finduser = await User.findOne({ where: {id: verifytoken.userId}}) 
-            if(finduser.refreshtoken){res.status(200).send("true");}
+            var accesstoken = {
+                userId: finduser.dataValues.id,
+                token: jwt.sign(
+                  { userId: finduser.dataValues.id },
+                  'spvDLMU678yZu635T32TKfc8pQj4jJ4f',
+                  { expiresIn: '15m' }
+                )
+            }    
+            if(finduser.refreshtoken){
+                try {
+                    const verifyrefreshtoken = await jwt.verify(finduser.refreshtoken, 'uc6wJq35CyAUV25aLn5pfarU8W9X86kNYK258bSpaVCmgez3722SmW7E3twAfxssV5V3MiU9Aq242Fjur8ji33L8NVeHjgXBDQ5m3PbB88573w6YP56chi5n8z3Y8jgiE24uW33SN8A3VsdEy2w3mS8mD58iq4V8LUiFDeJ2DZ8249AuSQLXP4ZTz8VgBi82u5G884gmj925553Y23K2FTRNLk7zK9qw4Zjy3Kd96veATFWvWM9Y8QK89t8v7sCF6rm27z7kuuUmBLq5dsjv5F57Zv44NvwGebGUW9ca227379N2JCWw8tcwvGD3qHK6q4239hNrSS35s2tc8feN232AR6aLMc6e55NW6CtYNePh6D5J2yHRB6797w4446qkJbQGA2kNF63U6vuK7jZ5kzK542e6y9y3ALTBqBmjsCLv5h6YY5iN6X34wBf3ghqpiJtN4Za5SE6medjimdrX2xFGe4g8DQQh3Rh83RhGDz3rr5byXB8KNcf3QaKNP9Xh')
+                    res.status(200).send(accesstoken.token);
+                } catch (error) {
+                    res.status(400).send("Vous devez vous reconnecter");
+                }
+
+            }
             else{res.status(400).send("false");}
         } catch (error) {
             res.status(400).send("false");

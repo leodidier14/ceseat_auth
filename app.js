@@ -4,7 +4,7 @@ const app = express()
 const dotenv = require('dotenv');
 
 //Import routes
-const authRoute = require('./routes/routes')
+const authRoute = require('./routes/auth')
 
 //Route middlewares
 app.use('/api/auth', authRoute)

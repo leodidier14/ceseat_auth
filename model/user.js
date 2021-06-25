@@ -18,7 +18,8 @@ var User = sequelize.define("user", {
     password: Sequelize.STRING,
     phone: Sequelize.STRING,
     usertype: Sequelize.STRING,
-    refreshtoken: Sequelize.TEXT  
+    refreshtoken: Sequelize.TEXT,
+    sponsorship: Sequelize.STRING 
 });
 
 module.exports = User;
