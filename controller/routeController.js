@@ -11,8 +11,6 @@ const User = require('../model/user')
 
 //Load validation functions
 const {loginValidation} = require('../validation')
-const {logoutValidation} = require('../validation')
-const {accesstokenValidation} = require('../validation')
 
 //Use json parser
 router.use(express.json());
@@ -54,12 +52,10 @@ const logincontroller = async (req, res) => {
 };
 //logout user
 const logoutcontroller = async (req, res) =>{ 
-    //Check if data format is OK
-    const { error } = logoutValidation(req.body);
-    if (error) return res.status(200).send(error.details[0].message)
-       
+
+    const fromaccesstoken = req.headers['authorization'];   
     try {
-        const verifytoken = await jwt.verify(req.body.accesstoken, 'spvDLMU678yZu635T32TKfc8pQj4jJ4f')
+        const verifytoken = await jwt.verify(fromaccesstoken, 'spvDLMU678yZu635T32TKfc8pQj4jJ4f')
         try {
             const finduser = await User.findOne({ where: {id: verifytoken.userId}}) 
             if(finduser.refreshtoken != null){
@@ -80,12 +76,10 @@ const logoutcontroller = async (req, res) =>{
 };
 //Check access
 const accesstokencontroller = async (req, res) =>{ 
-    //Check if data format is OK
-    const { error } = accesstokenValidation(req.body);
-    if (error) return res.status(200).send(error.details[0].message)
-       
+   
+    const fromaccesstoken = req.headers['authorization'];
     try {
-        const verifytoken = await jwt.verify(req.body.accesstoken, 'spvDLMU678yZu635T32TKfc8pQj4jJ4f')
+        const verifytoken = await jwt.verify(fromaccesstoken, 'spvDLMU678yZu635T32TKfc8pQj4jJ4f')
         try {
             const finduser = await User.findOne({ where: {id: verifytoken.userId}}) 
             var accesstoken = {
