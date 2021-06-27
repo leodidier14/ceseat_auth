@@ -12,6 +12,8 @@ const User = require('../model/user')
 //Load validation functions
 const {loginValidation} = require('../validation')
 
+
+
 //Use json parser
 router.use(express.json());
 
