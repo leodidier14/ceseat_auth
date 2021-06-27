@@ -7,25 +7,24 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const jwt = require('jsonwebtoken');
 
 //Load user model
-const User = require('../model/user')
+const Dev = require('../model/dev')
 
 //Load validation functions
 const {loginValidation} = require('../validation')
 
-
-
 //Use json parser
 router.use(express.json());
 
+
 //Connect user
-const logincontroller = async (req, res) => { 
+const logindevcontroller = async (req, res) => { 
 
     //Check if data format is OK
     const { error } = loginValidation(req.body);
     if (error) return res.status(200).send(error.details[0].message)
 
     //Checking if the email exists 
-    const reponse = await User.findOne({ where: {email: req.body.email} });
+    const reponse = await Dev.findOne({ where: {email: req.body.email} });
     if (!reponse) return res.status(200).send("L'utilisateur n'existe pas !"); 
     
     //Checking if password is correct
@@ -40,7 +39,7 @@ const logincontroller = async (req, res) => {
           { expiresIn: '24h' }
         )
     }
-    if (refreshtoken){await User.update({refreshtoken: refreshtoken.token},{where: {email: req.body.email}})};
+    if (refreshtoken){await Dev.update({refreshtoken: refreshtoken.token},{where: {email: req.body.email}})};
 
     var accesstoken = {
         userId: reponse.dataValues.id,
@@ -53,16 +52,16 @@ const logincontroller = async (req, res) => {
     res.status(200).send(accesstoken.token);
 };
 //logout user
-const logoutcontroller = async (req, res) =>{ 
+const logoutdevcontroller = async (req, res) =>{ 
 
     const fromaccesstoken = req.headers['authorization'];   
     try {
         const verifytoken = await jwt.verify(fromaccesstoken, 'spvDLMU678yZu635T32TKfc8pQj4jJ4f')
         try {
-            const finduser = await User.findOne({ where: {id: verifytoken.userId}}) 
+            const finduser = await Dev.findOne({ where: {id: verifytoken.userId}}) 
             if(finduser.refreshtoken != null){
                 try {
-                    await User.update({refreshtoken: null},{where: {id: verifytoken.userId}})
+                    await Dev.update({refreshtoken: null},{where: {id: verifytoken.userId}})
                     res.status(200).send("Déconnecté")
                 } catch (error) {
                     res.status(200).send("Erreur lors de la déconnexion")
@@ -77,13 +76,13 @@ const logoutcontroller = async (req, res) =>{
      }
 };
 //Check access
-const accesstokencontroller = async (req, res) =>{ 
+const accesstokendevcontroller = async (req, res) =>{ 
    
     const fromaccesstoken = req.headers['authorization'];
     try {
         const verifytoken = await jwt.verify(fromaccesstoken, 'spvDLMU678yZu635T32TKfc8pQj4jJ4f')
         try {
-            const finduser = await User.findOne({ where: {id: verifytoken.userId}}) 
+            const finduser = await Dev.findOne({ where: {id: verifytoken.userId}}) 
             var accesstoken = {
                 userId: finduser.dataValues.id,
                 token: jwt.sign(
@@ -110,7 +109,6 @@ const accesstokencontroller = async (req, res) =>{
      }
 };
 
-
-module.exports.logincontroller = logincontroller;
-module.exports.logoutcontroller = logoutcontroller;
-module.exports.accesstokencontroller = accesstokencontroller;
+module.exports.logindevcontroller = logindevcontroller;
+module.exports.logoutdevcontroller = logoutdevcontroller;
+module.exports.accesstokendevcontroller = accesstokendevcontroller;
