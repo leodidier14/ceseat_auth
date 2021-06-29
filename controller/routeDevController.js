@@ -22,16 +22,16 @@ const logindevcontroller = async (req, res) => {
     //Check if data format is OK
     const { error } = loginValidation(req.body);
     console.log(error)
-    if (error) return res.status(200).send(error.details[0].message)
+    if (error) return res.status(400).send(error.details[0].message)
     console.log(req.body)
 
     //Checking if the email exists 
     const reponse = await Dev.findOne({ where: { email: req.body.email } });
-    if (!reponse) return res.status(200).send("L'utilisateur n'existe pas !");
+    if (!reponse) return res.status(400).send("email doesn't exist");
 
     //Checking if password is correct
     const validPass = await bcrypt.compare(req.body.password, reponse.dataValues.password);
-    if (!validPass) return res.status(200).send('Mauvais mot de passe')
+    if (!validPass) return res.status(400).send('wrong password')
 
     var refreshtoken = {
         userId: reponse.dataValues.id,
@@ -64,17 +64,17 @@ const logoutdevcontroller = async (req, res) => {
             if (finduser.refreshtoken != null) {
                 try {
                     await Dev.update({ refreshtoken: null }, { where: { id: verifytoken.userId } })
-                    res.status(200).send("Déconnecté")
+                    res.status(200).send("disconnected")
                 } catch (error) {
-                    res.status(200).send("Erreur lors de la déconnexion")
+                    res.status(400).send("disconnection error")
                 }
             }
-            else { res.status(200).send("L'utilisateur est déjà déconnecté") }
+            else { res.status(400).send("user already disconnected") }
         } catch (error) {
-            res.status(200).send("L'utilisateur n'existe pas");
+            res.status(400).send("user does not exist");
         }
     } catch (error) {
-        res.status(200).send("Le token n'est pas valide");
+        res.status(400).send("invalid token");
     }
 };
 //Check access
@@ -98,16 +98,16 @@ const accesstokendevcontroller = async (req, res) => {
                     const verifyrefreshtoken = await jwt.verify(finduser.refreshtoken, 'uc6wJq35CyAUV25aLn5pfarU8W9X86kNYK258bSpaVCmgez3722SmW7E3twAfxssV5V3MiU9Aq242Fjur8ji33L8NVeHjgXBDQ5m3PbB88573w6YP56chi5n8z3Y8jgiE24uW33SN8A3VsdEy2w3mS8mD58iq4V8LUiFDeJ2DZ8249AuSQLXP4ZTz8VgBi82u5G884gmj925553Y23K2FTRNLk7zK9qw4Zjy3Kd96veATFWvWM9Y8QK89t8v7sCF6rm27z7kuuUmBLq5dsjv5F57Zv44NvwGebGUW9ca227379N2JCWw8tcwvGD3qHK6q4239hNrSS35s2tc8feN232AR6aLMc6e55NW6CtYNePh6D5J2yHRB6797w4446qkJbQGA2kNF63U6vuK7jZ5kzK542e6y9y3ALTBqBmjsCLv5h6YY5iN6X34wBf3ghqpiJtN4Za5SE6medjimdrX2xFGe4g8DQQh3Rh83RhGDz3rr5byXB8KNcf3QaKNP9Xh')
                     res.status(200).send(accesstoken.token);
                 } catch (error) {
-                    res.status(200).send("Vous devez vous reconnecter");
+                    res.status(400).send("you need to login");
                 }
 
             }
-            else { res.status(200).send("false"); }
+            else { res.status(400).send("false"); }
         } catch (error) {
-            res.status(200).send("false");
+            res.status(400).send("false");
         }
     } catch (error) {
-        res.status(200).send("false");
+        res.status(400).send("false");
     }
 };
 
