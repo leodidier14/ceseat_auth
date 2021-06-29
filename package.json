@@ -19,6 +19,7 @@
     "fs-extra": "^7.0.1",
     "joi": "^17.4.0",
     "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.0",
     "mssql": "^4.3.9",
     "sequelize": "^6.6.2",
     "sequelize-cli": "^6.2.0",
