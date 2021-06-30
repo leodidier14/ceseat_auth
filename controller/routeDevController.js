@@ -6,6 +6,8 @@ const express = require('express')
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const jwt = require('jsonwebtoken');
 
+const {postConnectionLogsController} = require('../controller/logsController')
+
 //Load user model
 const Dev = require('../model/dev')
 
@@ -27,11 +29,16 @@ const logindevcontroller = async (req, res) => {
 
     //Checking if the email exists 
     const reponse = await Dev.findOne({ where: { email: req.body.email } });
-    if (!reponse) return res.status(400).send("email doesn't exist");
+    if (!reponse){
+    return res.status(400).send("email doesn't exist");    
+    } 
 
     //Checking if password is correct
     const validPass = await bcrypt.compare(req.body.password, reponse.dataValues.password);
-    if (!validPass) return res.status(400).send('wrong password')
+    if (!validPass){
+    postConnectionLogsController("dev",reponse.dataValues.id,"wrong password")    
+    return res.status(400).send('wrong password')    
+    } 
 
     var refreshtoken = {
         userId: reponse.dataValues.id,
@@ -51,6 +58,7 @@ const logindevcontroller = async (req, res) => {
             { expiresIn: '72h' }
         )
     }
+    postConnectionLogsController("dev",reponse.dataValues.id,"validate")
     res.status(200).send({ token: accesstoken.token, id: reponse.dataValues.id });
 };
 //logout user
