@@ -12,7 +12,7 @@ const User = require('../model/user')
 //Load validation functions
 const { loginValidation } = require('../validation')
 
-
+const {postConnectionLogsController} = require('../controller/logsController')
 
 //Use json parser
 router.use(express.json());
@@ -26,11 +26,14 @@ const logincontroller = async (req, res) => {
 
     //Checking if the email exists 
     const reponse = await User.findOne({ where: { email: req.body.email } });
-    if (!reponse) return res.status(200).send("email doesn't exist");
+    if (!reponse) return res.status(400).send("email doesn't exist");
 
     //Checking if password is correct
     const validPass = await bcrypt.compare(req.body.password, reponse.dataValues.password);
-    if (!validPass) return res.status(200).send('wrong password')
+    if (!validPass){
+    postConnectionLogsController("customer",reponse.dataValues.id,"wrong password")    
+    return res.status(400).send('wrong password')    
+    } 
 
     var refreshtoken = {
         userId: reponse.dataValues.id,
@@ -51,6 +54,7 @@ const logincontroller = async (req, res) => {
         )
     }
 
+    postConnectionLogsController("customer",reponse.dataValues.id,"validate")
     res.status(200).send({ token: accesstoken.token, userId: reponse.dataValues.id });
 };
 //logout user
