@@ -67,6 +67,7 @@ const logoutdevcontroller = async (req, res) => {
     const fromaccesstoken = req.headers['authorization'];
     try {
         const verifytoken = await jwt.verify(fromaccesstoken, 'spvDLMU678yZu635T32TKfc8pQj4jJ4f')
+        console.log(verifytoken)
         try {
             const finduser = await Dev.findOne({ where: { id: verifytoken.userId } })
             if (finduser.refreshtoken != null) {

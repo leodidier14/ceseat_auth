@@ -5,7 +5,7 @@ const requestLog = require('./model/requestLog')
 app.use(cors())
 
 const path = require('path')
-const route = '/api/auth'
+const route = '/api/auth/'
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 const mongoose = require('mongoose');
 //Connect to db
@@ -21,6 +21,7 @@ const apiinfos = apiinf.findOneAndUpdate({name: pjson.name, port: process.env.PO
 //################################################//
 
 app.use((req,res,next) => {
+    console.log('test')
     requestLog.create({name:pjson.name,date: Date.now()}, (err)=> {
       if(err) console.log(err)
     })
