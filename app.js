@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const requestLog = require('./model/requestLog')
 app.use(cors())
 
 const path = require('path')
@@ -17,6 +18,13 @@ console.log("name : " + pjson.name);
 console.log("version : " + pjson.version);
 const apiinfos = apiinf.findOneAndUpdate({name: pjson.name, port: process.env.PORT }, {version : pjson.version}, {upsert: true}).exec()
 //################################################//
+
+app.use((req,res,next) => {
+    requestLog.create({name:pjson.name,date: Date.now()}, (err)=> {
+      if(err) console.log(err)
+    })
+    next()
+  })
 
 //Import routes
 const authRoute = require('./routes/auth')
