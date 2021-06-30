@@ -29,6 +29,12 @@ router.post('/login', async function(req, res){
 
     logincontroller(req, res)
 });
+
+router.get('/available', function(req, res) {
+    console.log('ask for availableity')
+    res.send(true)
+  });
+
 router.post('/logout', async function(req, res){
     const tokenapp = req.headers['tokenapp'];
     checkTokenApp = await verifTokenAppController(tokenapp)
