@@ -20,6 +20,7 @@ var User = sequelize.define("User", {
     refreshtoken: Sequelize.TEXT,
     sponsorshipLink: Sequelize.STRING,
     isSuspended: Sequelize.BOOLEAN,
+    
 });
 
 module.exports = User;
