@@ -36,7 +36,7 @@ const logincontroller = async (req, res) => {
     }
     
     try {
-        var suspended = req.body.isSuspended
+        var suspended = reponse.isSuspended
         if(suspended == true){
             res.status(400).send("Votre compte est suspendu ! vous n'avez pas le droit de vous connecter.") 
         }
