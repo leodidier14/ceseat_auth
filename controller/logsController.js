@@ -18,14 +18,17 @@ const postConnectionLogsController = async (userType,userId,reqStatus) => {
     if(SS<10) {SS='0'+SS;} 
     today = dd+'/'+mm+'/'+yyyy+'-'+HH+':'+MM+':'+SS;
 
-    //Create new connection log
-    const log = new Logs({
-        time: today,
-        type: userType,
-        idUser: userId,
-        state: reqStatus
-    });
-    await log.save();
+    try {
+        //Create new connection log
+        const log = new Logs({
+            time: today,
+            type: userType,
+            idUser: userId,
+            state: reqStatus
+        });
+        await log.save();
+    } catch (error) {}
+
 };
 
 module.exports.postConnectionLogsController = postConnectionLogsController;

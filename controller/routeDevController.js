@@ -23,9 +23,7 @@ const logindevcontroller = async (req, res) => {
 
     //Check if data format is OK
     const { error } = loginValidation(req.body);
-    console.log(error)
     if (error) return res.status(400).send(error.details[0].message)
-    console.log(req.body)
 
     //Checking if the email exists 
     const reponse = await Dev.findOne({ where: { email: req.body.email } });
@@ -58,8 +56,13 @@ const logindevcontroller = async (req, res) => {
             { expiresIn: '72h' }
         )
     }
-    postConnectionLogsController("dev",reponse.dataValues.id,"validate")
-    res.status(200).send({ token: accesstoken.token, id: reponse.dataValues.id });
+    try {
+        postConnectionLogsController("dev",reponse.dataValues.id,"validate")
+        res.status(200).send({ token: accesstoken.token, id: reponse.dataValues.id });
+    } catch (error) {
+        res.status(400).send(error)
+    }
+
 };
 //logout user
 const logoutdevcontroller = async (req, res) => {

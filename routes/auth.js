@@ -15,61 +15,34 @@ const {logindevcontroller} = require('../controller/routeDevController')
 const {logoutdevcontroller} = require('../controller/routeDevController')
 const {accesstokendevcontroller} = require('../controller/routeDevController')
 
-//Load tokenapp controller
-const {verifTokenAppController} = require('../controller/tokenAppController')
-
 //Use json parser
 router.use(express.json());
 
 //Routes user
 router.post('/login', async function(req, res){
-    const tokenapp = req.headers['tokenapp'];
-    checkTokenApp = await verifTokenAppController(tokenapp)
-    if (checkTokenApp == null) return res.status(200).send("La requête ne peux venir que de la gateway")
-    console.log('ici')
     logincontroller(req, res)
 });
 
 router.get('/available', function(req, res) {
-    console.log('ask for availableity')
     res.send(true)
-  });
+});
 
 router.post('/logout', async function(req, res){
-    const tokenapp = req.headers['tokenapp'];
-    checkTokenApp = await verifTokenAppController(tokenapp)
-    if (checkTokenApp == null) return res.status(200).send("La requête ne peux venir que de la gateway")
-
     logoutcontroller(req, res)
 });
 router.post('/accesstoken', async function(req, res){
-    const tokenapp = req.headers['tokenapp'];
-    checkTokenApp = await verifTokenAppController(tokenapp)
-    if (checkTokenApp == null) return res.status(200).send("La requête ne peux venir que de la gateway")
-
     accesstokencontroller(req, res)
 });
 
 //Routes dev
 router.post('/dev/login', async function(req, res){
-    const tokenapp = req.headers['tokenapp'];
-    checkTokenApp = await verifTokenAppController(tokenapp)
-    if (checkTokenApp == null) return res.status(200).send("La requête ne peux venir que de la gateway")
-
     logindevcontroller(req, res)
 });
 router.post('/dev/logout', async function(req, res){
-    const tokenapp = req.headers['tokenapp'];
-    checkTokenApp = await verifTokenAppController(tokenapp)
-    if (checkTokenApp == null) return res.status(200).send("La requête ne peux venir que de la gateway")
-
     logoutdevcontroller(req, res)
 });
 router.post('/dev/accesstoken', async function(req, res){
-    const tokenapp = req.headers['tokenapp'];
-    checkTokenApp = await verifTokenAppController(tokenapp)
-    if (checkTokenApp == null) return res.status(200).send("La requête ne peux venir que de la gateway")
-
     accesstokendevcontroller(req, res)
 });
+
 module.exports = router;

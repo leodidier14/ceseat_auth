@@ -28,6 +28,15 @@ app.use((req,res,next) => {
     next()
   })
 
+  app.use(async(req,res,next) => {
+    const tokenapp = req.headers['tokenapp'];
+    checkTokenApp = await verifTokenAppController(tokenapp) 
+    if(checkTokenApp || req.originalUrl.includes('available'))
+      next()
+    else 
+      res.status(400).send('not an authentified APP ')
+  })
+  
 //Import routes
 const authRoute = require('./routes/auth')
 
