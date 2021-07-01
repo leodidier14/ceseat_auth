@@ -20,6 +20,8 @@ console.log("version : " + pjson.version);
 const apiinfos = apiinf.findOneAndUpdate({name: pjson.name, port: process.env.PORT,path:route }, {version : pjson.version}, {upsert: true}).exec()
 //################################################//
 
+const {verifTokenAppController} = require('./controller/tokenAppController')
+
 app.use((req,res,next) => {
     console.log('test')
     requestLog.create({name:pjson.name,date: Date.now()}, (err)=> {
