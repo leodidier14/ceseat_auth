@@ -63,12 +63,8 @@ const logincontroller = async (req, res) => {
         )
     }
 
-    try {
         postConnectionLogsController("customer",reponse.dataValues.id,"validate")
         res.status(200).send({ token: accesstoken.token, userId: reponse.dataValues.id });
-    } catch (error) {
-        res.status(400).send(error)
-    }
 };
 //logout user
 const logoutcontroller = async (req, res) => {
