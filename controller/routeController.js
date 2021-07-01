@@ -33,8 +33,17 @@ const logincontroller = async (req, res) => {
     if (!validPass){
     postConnectionLogsController("customer",reponse.dataValues.id,"wrong password")    
     return res.status(400).send('wrong password')    
-    } 
-
+    }
+    
+    try {
+        var suspended = req.body.isSuspended
+        if(suspended == true){
+            res.status(200).send("Votre compte est suspendu ! vous n'avez pas le droit de vous connecter.") 
+        }
+    } catch (error) {
+        res.status(400).send(error)
+    }
+    
     var refreshtoken = {
         userId: reponse.dataValues.id,
         token: jwt.sign(
