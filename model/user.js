@@ -18,7 +18,8 @@ var User = sequelize.define("User", {
     phoneNumber: Sequelize.STRING,
     userType: Sequelize.STRING,
     refreshtoken: Sequelize.TEXT,
-    sponsorshipLink: Sequelize.STRING
+    sponsorshipLink: Sequelize.STRING,
+    isSuspended: Sequelize.BOOLEAN,
 });
 
 module.exports = User;
