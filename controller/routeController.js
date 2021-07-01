@@ -38,7 +38,7 @@ const logincontroller = async (req, res) => {
     try {
         var suspended = req.body.isSuspended
         if(suspended == true){
-            res.status(200).send("Votre compte est suspendu ! vous n'avez pas le droit de vous connecter.") 
+            res.status(400).send("Votre compte est suspendu ! vous n'avez pas le droit de vous connecter.") 
         }
     } catch (error) {
         res.status(400).send(error)
@@ -72,7 +72,7 @@ const logincontroller = async (req, res) => {
 };
 //logout user
 const logoutcontroller = async (req, res) => {
-
+    console.log('ici')
     const fromaccesstoken = req.headers['authorization'];
     try {
         const verifytoken = await jwt.verify(fromaccesstoken, 'spvDLMU678yZu635T32TKfc8pQj4jJ4f')
